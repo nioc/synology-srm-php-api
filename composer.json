@@ -1,0 +1,28 @@
+{
+    "name": "nioc/synology-srm-php-api",
+    "description": "API wrapper for Synology Router Manager (SRM)",
+    "type": "library",
+    "keywords": [
+        "synology",
+        "srm",
+        "router",
+        "api"
+    ],
+    "homepage": "https://github.com/nioc/synology-srm-php-api",
+    "license": "AGPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Nioc",
+            "role": "Developer",
+            "homepage": "https://github.com/nioc"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "SynologySRM\\": "src/"
+        }
+    },
+    "require": {
+        "analog/analog": "^1.0"
+    }
+}
