@@ -23,7 +23,7 @@ To install with composer:
 composer require nioc/synology-srm-php-api
 ```
 
-Or download [latest release](https://github.com/nioc/synology-srm-php-api/releases/latest) tar.gz archive,
+Or download [latest release](https://github.com/nioc/synology-srm-php-api/releases/latest) zip archive,
 
 ## Usage
 
@@ -78,7 +78,7 @@ Simply call the requested client method, exemple with traffic:
 $devicesTraffic = $client->getTraffic('live');
 ```
 
-You can see a full exemple [here](https://github.com/nioc/synology-srm-php-api/example.php).
+You can see a full exemple [here](https://github.com/nioc/synology-srm-php-api/blob/master/example.php).
 
 ## Versioning
 
