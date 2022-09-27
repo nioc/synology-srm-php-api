@@ -2,6 +2,8 @@
 
 [![license: AGPLv3](https://img.shields.io/badge/license-AGPLv3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![GitHub release](https://img.shields.io/github/release/nioc/synology-srm-php-api.svg)](https://github.com/nioc/synology-srm-php-api/releases/latest)
+[![Packagist Downloads](https://img.shields.io/packagist/dt/nioc/synology-srm-php-api?label=Composer%20installs)](https://packagist.org/packages/nioc/synology-srm-php-api)
+[![GitHub all releases](https://img.shields.io/github/downloads/nioc/synology-srm-php-api/total?label=Release%20downloads)](https://github.com/nioc/synology-srm-php-api/releases)
 
 API wrapper for Synology Router Manager (SRM).
 
@@ -13,6 +15,7 @@ API wrapper for Synology Router Manager (SRM).
 -    get devices traffic usage (live, day, week, month),
 -    get mesh nodes with status, connected devices, etc... ,
 -    get wake-on-lan devices,
+-    get access control groups with devices, online status, etc... ,
 -    add wake-on-lan on a device,
 -    wake-on-lan a device.
 

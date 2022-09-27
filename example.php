@@ -49,6 +49,9 @@ try {
     $devices = $client->getDevices();
     $logger->info(json_encode($devices));
 
+    $accessControlGroups = $client->getAccessControlGroups(true);
+    $logger->info(json_encode($accessControlGroups));
+
     $client->addWakeOnLanDevice('01:23:45:67:89:AB');
 
     $wakeOnLanDevices = $client->getWakeOnLanDevices();

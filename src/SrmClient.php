@@ -294,20 +294,23 @@ class SrmClient
      * Return knowned devices by router and information like IP, signal, etc...
      *
      * @param string $interval must be in 'all'
+     * @param string $info Info requested ('"basic"' for example)
      * @throws Exception if an error occurs
      * @return array An array of devices (object)
      */
-    public function getDevices($conntype = 'all')
+    public function getDevices($conntype = 'all', $info = null)
     {
         if (!in_array($conntype, ['all'])) {
             throw new \Exception('Invalid connection type');
         }
-        // [{"api":"SYNO.Core.Network.NSM.Beamforming","version":1,"method":"get"},{"api":"SYNO.Core.NGFW.QoS.Priority","version":1,"method":"list_high"},{"api":"SYNO.Core.NGFW.QoS.Priority","version":1,"method":"list_low"},{"api":"SYNO.Core.NGFW.QoS.Rules","version":1,"method":"get"},{"api":"SYNO.Core.Network.Router.BanDevice","version":1,"method":"get","recordtype":"all"},{"api":"SYNO.Core.Network.NSM.Device","version":4,"method":"get","conntype":"all"}]
         $params = [
             'method' => 'get',
             'version' => 4,
             'conntype' => $conntype
         ];
+        if (!is_null($info)) {
+            $params['info'] = $info;
+        } 
         try {
             $response = $this->_request('entry.cgi', 'SYNO.Core.Network.NSM.Device', $params);
         } catch (\Exception $e) {
@@ -366,6 +369,52 @@ class SrmClient
         }
         $this->logger->info('Get mesh nodes successful');
         return $response->data->nodes;
+    }
+
+    /**
+     * Return access control groups (safe search)
+     *
+     * @param boolean $requestOnlineStatus Ask for group online status
+     * @throws Exception if an error occurs
+     * @return array An array of groups (object)
+     */
+    public function getAccessControlGroups($requestOnlineStatus = false)
+    {
+        $additionnal = ['device', 'total_timespent'];
+        $params = [
+            'method' => 'get',
+            'version' => 1,
+            'additional' => \json_encode($additionnal),
+        ];
+        try {
+            $response = $this->_request('entry.cgi', 'SYNO.SafeAccess.AccessControl.ConfigGroup', $params);
+        } catch (\Exception $e) {
+            throw new \Exception("Could not get access control groups ({$e->getMessage()})");
+        }
+        $groups = $response->data->config_groups;
+        $this->logger->info('Get access control groups successful');
+        if ($requestOnlineStatus === true) {
+            try {
+                // get devices online status
+                $devices = $this->getDevices('all', '"basic"');
+                // filter online devices
+                $onlineDevices = [];
+                foreach ($devices as $device) {
+                    if ($device->is_online === true) {
+                        array_push($onlineDevices, $device->mac);
+                    }
+                }
+                // set access control group online status
+                foreach ($groups as $group) {
+                    $groupOnlineDevices = array_intersect($group->devices, $onlineDevices);
+                    $group->online_device_count = count($groupOnlineDevices);
+                    $group->online = $group->online_device_count > 0;
+                }
+            } catch (\Exception $e) {
+                $this->logger->notice("Could not set access control groups online status ({$e->getMessage()})");
+            }
+        }
+        return $groups;
     }
 
     /**
